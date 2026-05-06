@@ -1,0 +1,548 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — Aetheria{% endblock %}
+{% block content %}
+<div class="dashboard-section section-container">
+
+  <!-- Header -->
+  <div class="hero"
+    style="padding: 4rem 2rem; margin-bottom: 2.5rem; border-radius: 24px; display: flex; flex-direction: column; align-items: center; text-align: center;">
+    <h1 style="margin-bottom: 1rem;">Welcome back,<br><span>{{ user.first_name|default:user.username }}!</span></h1>
+    <p style="margin-bottom: 2.5rem;">Here's an overview of your prediction activity</p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="{% url 'predict' %}" class="btn btn-primary" style="padding: 0.8rem 2rem; border-radius: 999px;">
+        <i data-lucide="zap" style="width: 18px; height: 18px;"></i> New Prediction
+      </a>
+      <a href="{% url 'prediction_history' %}" class="btn btn-secondary"
+        style="padding: 0.8rem 2rem; border-radius: 999px;">
+        <i data-lucide="folder-open" style="width: 18px; height: 18px;"></i> View History
+      </a>
+    </div>
+  </div>
+
+  <div class="features" style="grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));">
+
+    <!-- Profile Card (Using cuboid hover) -->
+    <div class="cuboid-hover">
+      <div class="feature-card cuboid-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="user-circle"></i>
+          </div>
+          <h2 style="font-size: 1.2rem; margin: 0;">Profile Information</h2>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+          <div
+            style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Username</span>
+            <span style="font-weight: 500;">{{ user_info.username }}</span>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Email</span>
+            <span style="font-weight: 500;">{{ user_info.email }}</span>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; align-items: center;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">First Name</span>
+            <span style="font-weight: 500; text-align: right;">{{ user_info.first_name|default:"Not set" }}</span>
+          </div>
+          <div
+            style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem; align-items: center;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Last Name</span>
+            <span style="font-weight: 500; text-align: right;">{{ user_info.last_name|default:"Not set" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.25rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Member Since</span>
+            <span style="font-weight: 500; text-align: right;">{{ user_info.date_joined|date:"M d, Y" }}</span>
+          </div>
+        </div>
+
+        <a href="{% url 'edit_profile' %}" class="btn btn-secondary"
+          style="width: 100%; border-radius: 12px; font-size: 0.9rem;">
+          <i data-lucide="pencil" style="width: 14px; height: 14px;"></i> Edit Profile
+        </a>
+      </div>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="cuboid-hover">
+      <div class="feature-card cuboid-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="bar-chart-2"></i>
+          </div>
+          <h2 style="font-size: 1.2rem; margin: 0;">Prediction Statistics</h2>
+        </div>
+
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.5rem; text-align: center; margin-bottom: 1.5rem;">
+          <div style="padding: 1rem 0.5rem; background: rgba(99,102,241,0.05); border-radius: 12px;">
+            <div style="font-size: 1.5rem; font-weight: 800;">{{ prediction_stats.total_predictions }}</div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Total</div>
+          </div>
+          <div style="padding: 1rem 0.5rem; background: rgba(239,68,68,0.05); border-radius: 12px;">
+            <div style="font-size: 1.5rem; font-weight: 800; color: #fca5a5;">{{ prediction_stats.high_risk_count }}
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">High Risk</div>
+          </div>
+          <div style="padding: 1rem 0.5rem; background: rgba(34,197,94,0.05); border-radius: 12px;">
+            <div style="font-size: 1.5rem; font-weight: 800; color: #86efac;">{{ prediction_stats.low_risk_count }}
+            </div>
+            <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase;">Low Risk</div>
+          </div>
+        </div>
+
+        <div
+          style="text-align: center; padding: 1.5rem; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid var(--border);">
+          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">Average Risk Level</div>
+          <div style="font-size: 2.2rem; font-weight: 800; color: #fca5a5;">{{ prediction_stats.average_risk }}%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="cuboid-hover">
+      <div class="feature-card cuboid-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="zap"></i></div>
+          <h2 style="font-size: 1.2rem; margin: 0;">Quick Actions</h2>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="{% url 'prediction_history' %}"
+            style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; background: rgba(255,255,255,0.03); color: var(--text-primary); text-decoration: none; border: 1px solid var(--border); transition: all 0.2s;">
+            <i data-lucide="folder" style="width: 18px; color: var(--accent-light);"></i>
+            <span style="font-size: 0.95rem; font-weight: 500;">View All Predictions</span>
+          </a>
+          <a href="{% url 'contact' %}"
+            style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; background: rgba(255,255,255,0.03); color: var(--text-primary); text-decoration: none; border: 1px solid var(--border); transition: all 0.2s;">
+            <i data-lucide="mail" style="width: 18px; color: var(--accent-light);"></i>
+            <span style="font-size: 0.95rem; font-weight: 500;">Contact Support</span>
+          </a>
+          <a href="{% url 'about' %}"
+            style="display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 12px; background: rgba(255,255,255,0.03); color: var(--text-primary); text-decoration: none; border: 1px solid var(--border); transition: all 0.2s;">
+            <i data-lucide="info" style="width: 18px; color: var(--accent-light);"></i>
+            <span style="font-size: 0.95rem; font-weight: 500;">About Aetheria</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Card: Risk Distribution -->
+    <div class="cuboid-hover" style="grid-column: 1 / -1;">
+      <div class="feature-card cuboid-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="pie-chart"></i>
+          </div>
+          <h2 style="font-size: 1.2rem; margin: 0;">Risk Distribution</h2>
+        </div>
+
+        {% if prediction_stats.total_predictions > 0 %}
+        <div style="position: relative; height: 260px; width: 100%; margin-bottom: 1.5rem;">
+          <canvas id="riskChart"></canvas>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div
+            style="background: rgba(239,68,68,0.05); border: 1px solid rgba(239,68,68,0.2); padding: 1rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--text-muted);">High Risk</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #fca5a5;">{{ prediction_stats.high_risk_percentage|default:0 }}%</div>
+          </div>
+          <div
+            style="background: rgba(34,197,94,0.05); border: 1px solid rgba(34,197,94,0.2); padding: 1rem; border-radius: 12px; text-align: center;">
+            <div style="font-size: 0.8rem; color: var(--text-muted);">Low Risk</div>
+            <div style="font-size: 1.5rem; font-weight: 800; color: #86efac;">{{ prediction_stats.low_risk_percentage|default:0 }}%</div>
+          </div>
+        </div>
+        {% else %}
+        <div
+          style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px; color: var(--text-muted); gap: 1rem;">
+          <i data-lucide="box" style="width: 48px; height: 48px; opacity: 0.5;"></i>
+          <p>No predictions yet. <a href="{% url 'predict' %}" style="color: var(--accent-light);">Start predicting</a>
+          </p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Chart Card: Student Wise Plot (Collapsible) -->
+    <div class="cuboid-hover" style="grid-column: 1 / -1;">
+      <div class="feature-card cuboid-card" style="transition: all 0.3s ease;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0;">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="bar-chart"></i>
+            </div>
+            <h2 style="font-size: 1.2rem; margin: 0;">Student-wise Dropout Risk</h2>
+          </div>
+          <button id="toggleChartBtn" class="btn btn-secondary"
+            style="border-radius: 999px; padding: 0.5rem 1.2rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="chevron-down" id="toggleIcon"
+              style="width: 16px; height: 16px; transition: transform 0.3s;"></i>
+            <span id="toggleText">View Chart</span>
+          </button>
+        </div>
+
+        <div id="collapsibleChartContent"
+          style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 0;">
+          <div style="padding-top: 1.5rem;">
+            {% if prediction_stats.total_predictions > 0 %}
+            <div style="position: relative; height: 350px; width: 100%; margin-bottom: 0.5rem;">
+              <canvas id="studentBarChart"></canvas>
+            </div>
+            {% else %}
+            <div
+              style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px; color: var(--text-muted); gap: 1rem;">
+              <i data-lucide="box" style="width: 48px; height: 48px; opacity: 0.5;"></i>
+              <p>No student data available to plot.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chart Card: Scatter Plot -->
+    <div class="cuboid-hover" style="grid-column: 1 / -1;">
+      <div class="feature-card cuboid-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0;">
+          <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="git-commit"></i></div>
+            <h2 style="font-size: 1.2rem; margin: 0;">Absences vs Dropout Risk</h2>
+          </div>
+          <button id="toggleScatterBtn" class="btn btn-secondary" style="border-radius: 999px; padding: 0.5rem 1.2rem; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+            <i data-lucide="chevron-down" id="scatterToggleIcon" style="width: 16px; height: 16px; transition: transform 0.3s;"></i>
+            <span id="scatterToggleText">View Chart</span>
+          </button>
+        </div>
+        
+        <div id="collapsibleScatterContent" style="max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1); margin-top: 0;">
+          <div style="padding-top: 1.5rem;">
+            {% if prediction_stats.total_predictions > 0 %}
+            <div style="position: relative; height: 350px; width: 100%; margin-bottom: 0.5rem;">
+              <canvas id="scatterChart"></canvas>
+            </div>
+            {% else %}
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 200px; color: var(--text-muted); gap: 1rem;">
+              <i data-lucide="box" style="width: 48px; height: 48px; opacity: 0.5;"></i>
+              <p>No student data available to plot.</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="cuboid-hover">
+      <div class="feature-card cuboid-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="history"></i></div>
+          <h2 style="font-size: 1.2rem; margin: 0;">Recent Activity</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <!-- Last Login Activity -->
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);">
+            <div>
+              <div style="font-size: 0.9rem; font-weight: 500;">Last account login</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Session status</div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-align: right;">{{ user_info.last_login }}
+            </div>
+          </div>
+
+          {% for activity in recent_activities|slice:":2" %}
+          <div
+            style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); last-child { border-bottom: none; }">
+            <div>
+              <div style="font-size: 0.9rem; font-weight: 500;">{{ activity.action }}</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted);">Prediction event</div>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-align: right;">{{
+              activity.timestamp|timesince }} ago</div>
+          </div>
+          {% empty %}
+          <!-- No other activity -->
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Settings -->
+    <div class="cuboid-hover">
+      <div class="feature-card cuboid-card">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+          <div class="icon-3d" style="margin-bottom: 0; width: 44px; height: 44px;"><i data-lucide="settings"></i></div>
+          <h2 style="font-size: 1.2rem; margin: 0;">Account Settings</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <a href="{% url 'change_password' %}" class="btn btn-secondary"
+            style="width: 100%; border-radius: 12px; font-size: 0.9rem; justify-content: flex-start; padding: 0.8rem 1rem;">
+            <i data-lucide="key" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> Change Password
+          </a>
+          <form action="{% url 'logout' %}" method="post" style="width: 100%;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-secondary"
+              style="width: 100%; border-radius: 12px; font-size: 0.9rem; justify-content: flex-start; padding: 0.8rem 1rem; color: #ef4444; border-color: rgba(239,68,68,0.2);">
+              <i data-lucide="log-out" style="width: 16px; height: 16px; margin-right: 0.5rem;"></i> Logout
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .feature-card a[href]:hover {
+    background: rgba(255, 255, 255, 0.08) !important;
+    border-color: var(--accent) !important;
+  }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Risk Distribution Doughnut Chart
+    const riskCanvas = document.getElementById('riskChart');
+    if (riskCanvas) {
+      const ctx = riskCanvas.getContext('2d');
+      const high = Number("{{ prediction_stats.high_risk_count|default:0 }}");
+      const low = Number("{{ prediction_stats.low_risk_count|default:0 }}");
+
+      if (high > 0 || low > 0) {
+        new Chart(ctx, {
+          type: 'doughnut',
+          data: {
+            labels: ['High Risk', 'Low Risk'],
+            datasets: [{
+              data: [high, low],
+              backgroundColor: ['rgba(239,68,68,0.7)', 'rgba(34,197,94,0.7)'],
+              borderColor: ['rgba(239,68,68,0.2)', 'rgba(34,197,94,0.2)'],
+              borderWidth: 2,
+              hoverOffset: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '75%',
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: { color: '#94a3b8', font: { family: 'Inter', size: 13 }, usePointStyle: true }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Define Shared Data
+    let students = [];
+    try {
+      {% if chart_data %}
+      {% for s in chart_data.students %}
+      students.push({
+        name: "{{ s.student_name|escapejs }}",
+        risk: Number("{{ s.dropout_risk_percentage|escapejs }}"),
+        age: "{{ s.age }}",
+        absences: "{{ s.number_of_absences }}",
+        studyTime: "{{ s.study_time }} hrs/week"
+      });
+      {% endfor %}
+      {% endif %}
+    } catch (e) {
+      console.error("Error formatting chart data", e);
+    }
+
+    // Define studCanvas globally within DOMContentLoaded
+    const studCanvas = document.getElementById('studentBarChart');
+    const toggleBtn = document.getElementById('toggleChartBtn');
+    const chartContent = document.getElementById('collapsibleChartContent');
+    const toggleIcon = document.getElementById('toggleIcon');
+    const toggleText = document.getElementById('toggleText');
+    let isChartVisible = false;
+    let myBarChart = null;
+
+    if (toggleBtn && chartContent) {
+      toggleBtn.addEventListener('click', function () {
+        isChartVisible = !isChartVisible;
+
+        if (isChartVisible) {
+          chartContent.style.maxHeight = '500px';
+          toggleIcon.style.transform = 'rotate(180deg)';
+          toggleText.textContent = 'Hide Chart';
+
+          if (!myBarChart && studCanvas) {
+            renderStudentBarChart();
+          }
+        } else {
+          chartContent.style.maxHeight = '0';
+          toggleIcon.style.transform = 'rotate(0deg)';
+          toggleText.textContent = 'View Chart';
+        }
+      });
+    }
+
+    // Scatter Plot Toggle Logic
+    const toggleScatterBtn = document.getElementById('toggleScatterBtn');
+    const scatterContent = document.getElementById('collapsibleScatterContent');
+    const scatterToggleIcon = document.getElementById('scatterToggleIcon');
+    const scatterToggleText = document.getElementById('scatterToggleText');
+    const scatterCtxCanvas = document.getElementById('scatterChart');
+    let isScatterVisible = false;
+    let myScatterChart = null;
+
+    if (toggleScatterBtn && scatterContent) {
+      toggleScatterBtn.addEventListener('click', function() {
+        isScatterVisible = !isScatterVisible;
+        
+        if (isScatterVisible) {
+          scatterContent.style.maxHeight = '500px'; 
+          scatterToggleIcon.style.transform = 'rotate(180deg)';
+          scatterToggleText.textContent = 'Hide Chart';
+          
+          if (!myScatterChart && scatterCtxCanvas) {
+            renderScatterChart();
+          }
+        } else {
+          scatterContent.style.maxHeight = '0';
+          scatterToggleIcon.style.transform = 'rotate(0deg)';
+          scatterToggleText.textContent = 'View Chart';
+        }
+      });
+    }
+
+    function renderScatterChart() {
+      if (!scatterCtxCanvas || students.length === 0) return;
+      const scatterCtx = scatterCtxCanvas.getContext('2d');
+      const scatterPointBgColors = students.map(s => s.risk > 50 ? 'rgba(239,68,68,0.7)' : 'rgba(34,197,94,0.7)');
+      const scatterPointBorderColors = students.map(s => s.risk > 50 ? 'rgba(239,68,68,1)' : 'rgba(34,197,94,1)');
+      
+      myScatterChart = new Chart(scatterCtx, {
+        type: 'scatter',
+        data: {
+          datasets: [{
+            label: 'Student',
+            data: students.map(s => ({ x: Number(s.absences), y: s.risk })),
+            backgroundColor: scatterPointBgColors,
+            borderColor: scatterPointBorderColors,
+            borderWidth: 2,
+            pointRadius: 6,
+            pointHoverRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            x: {
+              title: { display: true, text: 'Number of Absences', color: '#94a3b8' },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#94a3b8' }
+            },
+            y: {
+              beginAtZero: true,
+              max: 100,
+              title: { display: true, text: 'Dropout Risk %', color: '#94a3b8' },
+              grid: { color: 'rgba(255,255,255,0.05)' },
+              ticks: { color: '#94a3b8' }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: 'rgba(15,23,42,0.95)',
+              titleColor: '#818cf8',
+              titleFont: { size: 14, weight: 'bold' },
+              bodyColor: '#cbd5e1',
+              bodyFont: { size: 12 },
+              padding: 12,
+              cornerRadius: 10,
+              displayColors: false,
+              callbacks: {
+                label: function(context) {
+                  const student = students[context.dataIndex];
+                  return [
+                    ` Name: ${student.name}`,
+                    ` Risk: ${student.risk.toFixed(1)}%`,
+                    ` Absences: ${student.absences}`,
+                    ` Study Time: ${student.studyTime}`
+                  ];
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    function renderStudentBarChart() {
+      const studCtx = studCanvas.getContext('2d');
+      const studentNames = students.map(s => s.name);
+      const dropoutRisks = students.map(s => s.risk);
+
+      if (studentNames.length > 0 && dropoutRisks.length > 0) {
+        const bgColors = students.map(s => s.risk > 50 ? 'rgba(239,68,68,0.7)' : 'rgba(34,197,94,0.7)');
+        const borderColors = students.map(s => s.risk > 50 ? 'rgba(239,68,68,1)' : 'rgba(34,197,94,1)');
+
+        myBarChart = new Chart(studCtx, {
+          type: 'bar',
+          data: {
+            labels: studentNames,
+            datasets: [{
+              label: 'Dropout Risk %',
+              data: dropoutRisks,
+              backgroundColor: bgColors,
+              borderColor: borderColors,
+              borderWidth: 1,
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: 100,
+                grid: { color: 'rgba(255,255,255,0.05)' },
+                ticks: { color: '#94a3b8' },
+                title: { display: true, text: 'Risk Percentage', color: '#94a3b8' }
+              },
+              x: {
+                grid: { display: false },
+                ticks: { color: '#94a3b8', maxRotation: 45, minRotation: 45 }
+              }
+            },
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                backgroundColor: 'rgba(15,23,42,0.95)',
+                titleColor: '#818cf8',
+                titleFont: { size: 14, weight: 'bold' },
+                bodyColor: '#cbd5e1',
+                bodyFont: { size: 12 },
+                padding: 12,
+                cornerRadius: 10,
+                displayColors: false,
+                callbacks: {
+                  label: function (context) {
+                    const student = students[context.dataIndex];
+                    return [
+                      ` Risk: ${student.risk.toFixed(1)}%`,
+                      ` Age: ${student.age}`,
+                      ` Study Time: ${student.studyTime}`,
+                      ` Absences: ${student.absences}`
+                    ];
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+</script>
+{% endblock %}

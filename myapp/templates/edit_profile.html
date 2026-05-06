@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile — Aetheria{% endblock %}
+{% block content %}
+<div class="edit-profile-section">
+
+  <!-- Header -->
+  <div class="hero" style="padding: 3rem 2rem; margin-bottom: 2.5rem; border-radius: 24px;">
+    <div class="icon-3d" style="margin: 0 auto 1.5rem; width: 56px; height: 56px;">
+      <i data-lucide="pencil" style="width: 28px; height: 28px; color: var(--accent-light);"></i>
+    </div>
+    <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">Edit Your Profile</h1>
+    <p style="margin-bottom: 0;">Update your personal information below</p>
+  </div>
+
+  <div class="edit-profile-container" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+
+    <!-- Form Card -->
+    <div class="cuboid-hover">
+      <div class="feature-card cuboid-card" style="padding: 2.5rem;">
+        <form method="POST" class="edit-profile-form">
+          {% csrf_token %}
+
+          <!-- Account Information -->
+          <div class="form-section" style="margin-bottom: 2.5rem;">
+            <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; margin-bottom: 1.5rem;">
+              <i data-lucide="shield" style="width: 20px; color: var(--accent-light);"></i> Account Details
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+              <div class="form-group">
+                <label for="username">Username <small style="color:var(--text-muted); font-weight:400;">(read-only)</small></label>
+                <input type="text" id="username" name="username"
+                  value="{{ user.username }}" readonly disabled
+                  style="opacity:0.5; cursor:not-allowed; background: rgba(255,255,255,0.02);" />
+                <small style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 0.4rem;">Username is permanent and cannot be modified</small>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address <span style="color:var(--danger);">*</span></label>
+                <input type="email" id="email" name="email"
+                  value="{{ user.email }}" placeholder="your@email.com" required style="background: rgba(255,255,255,0.03);" />
+                <small style="color: var(--text-muted); font-size: 0.8rem; display: block; margin-top: 0.4rem;">Used for important notifications</small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Personal Information -->
+          <div class="form-section">
+            <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; margin-bottom: 1.5rem;">
+              <i data-lucide="user" style="width: 20px; color: var(--purple);"></i> Personal Information
+            </h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+              <div class="form-group">
+                <label for="first_name">First Name</label>
+                <input type="text" id="first_name" name="first_name"
+                  value="{{ user.first_name }}" placeholder="Enter first name" style="background: rgba(255,255,255,0.03);" />
+              </div>
+              <div class="form-group">
+                <label for="last_name">Last Name</label>
+                <input type="text" id="last_name" name="last_name"
+                  value="{{ user.last_name }}" placeholder="Enter last name" style="background: rgba(255,255,255,0.03);" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div style="display: flex; gap: 1rem; margin-top: 3rem; justify-content: flex-end;">
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary" style="border-radius: 999px;">Cancel</a>
+            <button type="submit" class="btn btn-primary" style="border-radius: 999px;">
+              <i data-lucide="save" style="width: 18px;"></i> Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Profile Overview Sidebar -->
+    <div class="cuboid-hover">
+      <div class="feature-card cuboid-card" style="padding: 2.5rem;">
+        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
+          <div class="icon-3d" style="width: 44px; height: 44px; margin: 0;"><i data-lucide="user-circle"></i></div>
+          <h2 style="font-size: 1.2rem; margin: 0;">Overview</h2>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Username</span>
+            <span style="font-weight: 500;">{{ user.username }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Email</span>
+            <span style="font-weight: 500;">{{ user.email }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Full Name</span>
+            <span style="font-weight: 500;">{{ user.first_name|default:"Not set" }} {{ user.last_name|default:"" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Member Since</span>
+            <span style="font-weight: 500;">{{ user.date_joined|date:"M d, Y" }}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--text-muted); font-size: 0.9rem;">Status</span>
+            <span style="font-weight: 600; color: var(--success); display: flex; align-items: center; gap: 0.25rem;">
+              <i data-lucide="check-circle" style="width: 14px; height: 14px;"></i> Active
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @media (max-width: 768px) {
+    .edit-profile-container { grid-template-columns: 1fr !important; }
+  }
+</style>
+{% endblock %}

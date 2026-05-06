@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block title %}About — Aetheria{% endblock %}
+{% block content %}
+<div class="info-section section-container">
+  <div style="max-width: 1000px; margin: 0 auto; padding: 2rem 0;">
+
+    <!-- Header Section -->
+    <div style="text-align: center; margin-bottom: 4rem;">
+      <div class="hero-badge" style="margin-bottom: 1.5rem;">EST. 2026</div>
+      <h1 style="font-size: 3.5rem; font-weight: 850; letter-spacing: -0.04em; margin-bottom: 1rem;">The Story of <br><span>Aetheria</span></h1>
+      <p style="color: var(--text-secondary); font-size: 1.25rem; max-width: 600px; margin: 0 auto; line-height: 1.6;">
+        Harnessing the power of artificial intelligence to bridge the gap between student potential and academic success.
+      </p>
+    </div>
+
+    <!-- Our Mission Card (Perfectly Aligned) -->
+    <div class="cuboid-hover" style="margin-bottom: 4rem;">
+      <div class="feature-card cuboid-card" style="padding: 3.5rem; position: relative; display: flex; flex-direction: column; align-items: center; text-align: center;">
+        <div class="icon-3d" style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent), var(--purple)); border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 15px 35px var(--accent-glow); margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; transform: translateY(-5px);">
+          <i data-lucide="target" style="color: white; width: 38px; height: 38px;"></i>
+        </div>
+
+        <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 1.5rem; letter-spacing: -0.02em;">Our Mission</h2>
+        <p style="color: var(--text-secondary); font-size: 1.15rem; line-height: 1.9; max-width: 800px; margin: 0 auto;">
+          At Aetheria, we believe every student deserves the opportunity to reach their full potential. Our mission is to dismantle the barriers to academic completion by providing educators with predictive, data-driven insights. 
+          <br><br>
+          By identifying risk factors before they manifest as failure, we empower institutions to move from reactive management to proactive intervention, ensuring no student is left behind in the pursuit of knowledge.
+        </p>
+      </div>
+    </div>
+
+    <!-- Expanded Content Grid -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 2rem; margin-bottom: 4rem;">
+      
+      <!-- The Technology -->
+      <div class="cuboid-hover">
+        <div class="feature-card cuboid-card" style="height: 100%; padding: 2.5rem;">
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="cpu" style="color: var(--accent-light);"></i> The Technology
+          </h3>
+          <p style="color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+            Aetheria is built upon a sophisticated Gradient Boosting framework, trained on thousands of unique student data points. Our algorithm doesn't just look at grades; it analyzes a holistic web of 30+ socio-economic, behavioral, and demographic indicators to predict outcomes with an unprecedented <strong>96.92% accuracy</strong>.
+          </p>
+          <div style="margin-top: 1.5rem; padding: 1rem; background: rgba(99,102,241,0.05); border-radius: 12px; border: 1px solid var(--border);">
+             <span style="font-size: 0.85rem; color: var(--accent-light); font-weight: 600;">STATUS: PRECISE & OPERATIONAL</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why It Matters -->
+      <div class="cuboid-hover">
+        <div class="feature-card cuboid-card" style="height: 100%; padding: 2.5rem;">
+          <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="heart" style="color: #ef4444;"></i> Why It Matters
+          </h3>
+          <p style="color: var(--text-secondary); line-height: 1.8; font-size: 1.05rem;">
+            Student dropout isn't just a statistic; it's a loss of human potential. Each student who completes their education contributes more to society, local economies, and their own future stability. Aetheria turns complex data into a clear roadmap for success, helping teachers become mentors when it matters most.
+          </p>
+          <ul style="margin-top: 1.25rem; list-style: none; color: var(--text-secondary); font-size: 0.95rem;">
+            <li style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;"><i data-lucide="check" style="width: 16px; color: var(--success);"></i> Reduced Dropout Rates</li>
+            <li style="display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="check" style="width: 16px; color: var(--success);"></i> Optimized Resource Allocation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features Section (Big) -->
+    <div class="cuboid-hover" style="margin-bottom: 4rem;">
+      <div class="feature-card cuboid-card" style="padding: 3.5rem;">
+        <div style="text-align: center; margin-bottom: 3rem;">
+            <h3 style="font-size: 1.75rem; font-weight: 800; margin-bottom: 1rem;">Platform Capabilities</h3>
+            <div style="width: 60px; height: 3px; background: var(--accent); margin: 0 auto;"></div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2.5rem;">
+          <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+            <div style="background: rgba(34,197,94,0.1); padding: 8px; border-radius: 8px;"><i data-lucide="shield-check" style="color: var(--success); width: 24px; height: 24px;"></i></div>
+            <div>
+                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Data Privacy</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">End-to-end encryption for all sensitive student information, ensuring GDPR and ethical compliance.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+            <div style="background: rgba(6,182,212,0.1); padding: 8px; border-radius: 8px;"><i data-lucide="zap" style="color: var(--cyan); width: 24px; height: 24px;"></i></div>
+            <div>
+                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Rapid Insights</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Process student records and generate risk profiles in under 200ms with our optimized engine.</p>
+            </div>
+          </div>
+          <div style="display: flex; gap: 1.25rem; align-items: flex-start;">
+            <div style="background: rgba(245,158,11,0.1); padding: 8px; border-radius: 8px;"><i data-lucide="file-text" style="color: var(--warning); width: 24px; height: 24px;"></i></div>
+            <div>
+                <h4 style="font-size: 1.1rem; margin-bottom: 0.5rem;">Smart Archiving</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">Maintain a lifelong history of predictions to track the effectiveness of intervention strategies over time.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Final CTA -->
+    <div style="text-align: center; margin-top: 5rem; padding: 4rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 32px; backdrop-filter: blur(10px);">
+      <h2 style="font-size: 2.25rem; font-weight: 800; margin-bottom: 1.5rem;">Become a Partner in Student Success</h2>
+      <p style="color: var(--text-secondary); margin-bottom: 2.5rem; font-size: 1.15rem; max-width: 600px; margin-left: auto; margin-right: auto;">Join the growing number of educators using Aetheria to shape the future of student retention.</p>
+      <div style="display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap;">
+        <a href="{% url 'contact' %}" class="btn btn-secondary btn-large" style="border-radius: 999px;">
+          <i data-lucide="mail"></i> Get in Touch
+        </a>
+        <a href="{% url 'predict' %}" class="btn btn-primary btn-large" style="border-radius: 999px;">
+          <i data-lucide="zap"></i> Start Predicting
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% block title %}Prediction History — Aetheria{% endblock %}
+{% block content %}
+<div class="history-section">
+
+  <!-- Header -->
+  <div class="history-header">
+    <div class="icon-3d" style="margin: 0 auto 1.5rem; width: 64px; height: 64px;">
+      <i data-lucide="history" style="width: 32px; height: 32px; color: var(--cyan);"></i>
+    </div>
+    <h1>Prediction History</h1>
+    <p class="history-subtitle">Review all previously tracked risk assessments.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="cuboid-hover">
+      <div class="stat-card cuboid-card" style="display: flex; align-items: center; gap: 1.5rem; padding: 2rem;">
+        <div class="icon-3d" style="margin: 0; flex-shrink: 0;"><i data-lucide="bar-chart-2"></i></div>
+        <div style="text-align: left;">
+          <div style="font-size: 2rem; font-weight: 800; line-height: 1;">{{ total_predictions }}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-top: 0.25rem;">Total</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cuboid-hover">
+      <div class="stat-card cuboid-card" style="display: flex; align-items: center; gap: 1.5rem; padding: 2rem;">
+        <div class="icon-3d" style="margin: 0; flex-shrink: 0; color: #fca5a5;"><i data-lucide="alert-triangle"></i></div>
+        <div style="text-align: left;">
+          <div style="font-size: 2rem; font-weight: 800; line-height: 1; color: #fca5a5;">{{ high_risk_count }}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-top: 0.25rem;">High Risk</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cuboid-hover">
+      <div class="stat-card cuboid-card" style="display: flex; align-items: center; gap: 1.5rem; padding: 2rem;">
+        <div class="icon-3d" style="margin: 0; flex-shrink: 0; color: #86efac;"><i data-lucide="check-circle"></i></div>
+        <div style="text-align: left;">
+          <div style="font-size: 2rem; font-weight: 800; line-height: 1; color: #86efac;">{{ low_risk_count }}</div>
+          <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; margin-top: 0.25rem;">Low Risk</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  {% if predictions %}
+  <div class="glass-card" style="padding: 1.5rem 0 0 0; overflow: hidden;">
+    <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 1.5rem; padding: 0 2rem; display: flex; align-items: center; gap: 0.75rem;">
+      <i data-lucide="list" style="width: 20px; color: var(--accent-light);"></i> All Predictions
+    </h2>
+    
+    <div class="table-responsive">
+      <table class="predictions-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Sch</th>
+            <th>Gen</th>
+            <th>Age</th>
+            <th>Fin Grd</th>
+            <th>Abs</th>
+            <th>Status</th>
+            <th>Risk %</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prediction in predictions %}
+          <tr class="{% if prediction.predicted_dropout %}high-risk-row{% else %}low-risk-row{% endif %}">
+            <td style="color: var(--text-muted);">{{ prediction.created_at|date:"M d, Y" }}</td>
+            <td><strong style="color: var(--text-primary);">{{ prediction.student_name }}</strong></td>
+            <td>{{ prediction.school }}</td>
+            <td>{{ prediction.gender }}</td>
+            <td>{{ prediction.age }}</td>
+            <td><strong>{{ prediction.final_grade }}</strong></td>
+            <td>{{ prediction.number_of_absences }}</td>
+            <td>
+              {% if prediction.predicted_dropout %}
+              <span class="badge badge-danger">High Risk</span>
+              {% else %}
+              <span class="badge badge-success">Low Risk</span>
+              {% endif %}
+            </td>
+            <td style="min-width: 140px;">
+              <div class="risk-bar">
+                <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+                  <div class="risk-fill" style="width: {{ prediction.dropout_risk_percentage|floatformat:2 }}%;"></div>
+                </div>
+                <span style="font-size: 0.8rem; font-weight: 600;">{{ prediction.dropout_risk_percentage|floatformat:2 }}%</span>
+              </div>
+            </td>
+            <td>
+              <a href="{% url 'edit_prediction' prediction.id %}" class="btn-edit" aria-label="Edit Prediction">
+                <i data-lucide="pencil" style="width: 16px;"></i>
+              </a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% else %}
+  <div class="glass-card" style="text-align: center; padding: 4rem 2rem;">
+    <div class="icon-3d" style="margin: 0 auto 1.5rem; color: var(--text-muted); opacity: 0.5;"><i data-lucide="inbox"></i></div>
+    <h3 style="font-size: 1.3rem; margin-bottom: 0.75rem;">No Predictions Yet</h3>
+    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">You haven't made any risk predictions yet. Start by analyzing a student.</p>
+    <a href="{% url 'predict' %}" class="btn btn-primary" style="display: inline-flex;">
+      <i data-lucide="zap"></i> First Prediction
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

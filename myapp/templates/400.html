@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>400 — Bad Request | Aetheria</title>
+  {% load static %}
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .error-page { min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:2rem; }
+    .error-code { font-size:clamp(6rem,20vw,12rem);font-weight:900;line-height:1;background:linear-gradient(135deg,#06b6d4,#6366f1);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:-0.05em;margin-bottom:1rem;animation:pulse-glow 3s ease-in-out infinite; }
+    @keyframes pulse-glow { 0%,100%{filter:drop-shadow(0 0 20px rgba(6,182,212,0.4))}50%{filter:drop-shadow(0 0 50px rgba(99,102,241,0.8))} }
+    .error-icon-wrap { width:80px;height:80px;margin:0 auto 2rem;background:linear-gradient(135deg,#06b6d4,#6366f1);border-radius:24px;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 60px rgba(6,182,212,0.4);animation:float 4s ease-in-out infinite; }
+    @keyframes float { 0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)} }
+    .error-title { font-size:1.8rem;font-weight:800;margin-bottom:1rem;letter-spacing:-0.03em; }
+    .error-desc { color:var(--text-secondary,#94a3b8);font-size:1.05rem;max-width:420px;margin:0 auto 2.5rem;line-height:1.7; }
+    .error-actions { display:flex;gap:1rem;justify-content:center;flex-wrap:wrap; }
+    .btn-outline-error { padding:0.8rem 2rem;border-radius:999px;border:1.5px solid rgba(6,182,212,0.4);color:#06b6d4;text-decoration:none;font-weight:600;transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem; }
+    .btn-primary-error { padding:0.8rem 2rem;border-radius:999px;background:linear-gradient(135deg,#06b6d4,#6366f1);color:white;text-decoration:none;font-weight:600;transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;box-shadow:0 8px 30px rgba(6,182,212,0.4); }
+    .btn-primary-error:hover { transform:translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="error-page">
+    <div>
+      <div class="error-icon-wrap">
+        <i data-lucide="alert-triangle" style="color: white; width: 40px; height: 40px;"></i>
+      </div>
+      <div class="error-code">400</div>
+      <h1 class="error-title">Bad Request</h1>
+      <p class="error-desc">
+        The server couldn't understand your request. This might be due to malformed syntax or invalid input. Please try again.
+      </p>
+      <div class="error-actions">
+        <a href="javascript:history.back()" class="btn-outline-error">
+          <i data-lucide="arrow-left" style="width: 16px;"></i> Go Back
+        </a>
+        <a href="/" class="btn-primary-error">
+          <i data-lucide="home" style="width: 16px;"></i> Back to Home
+        </a>
+      </div>
+    </div>
+  </div>
+  <script>lucide.createIcons();</script>
+</body>
+</html>

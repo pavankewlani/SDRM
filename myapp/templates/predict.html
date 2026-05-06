@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% block title %}Predict Dropout Risk — Aetheria{% endblock %}
+{% block content %}
+<div class="predict-section section-container">
+
+  <!-- Header -->
+  <div class="hero" style="padding: 4rem 2rem; margin-bottom: 3rem; background: linear-gradient(135deg, #0f172a, #1e1b4b); border: 1px solid var(--border-bright); display: flex; flex-direction: column; align-items: center; text-align: center;">
+    <div class="icon-3d" style="width: 64px; height: 64px; margin-bottom: 1.5rem;">
+      <i data-lucide="brain-circuit" style="width: 32px; height: 32px; color: var(--accent-light);"></i>
+    </div>
+    <h1 style="margin-bottom: 1rem;">Student Risk<br><span>Assessment</span></h1>
+    <p style="margin-bottom: 0;">Analyze 30+ risk factors to predict dropout likelihood with ML precision.</p>
+  </div>
+
+  <div class="predict-container" style="max-width: 1000px; margin: 0 auto;">
+
+    <!-- Prediction Result -->
+    {% if prediction_result %}
+    <div class="cuboid-hover" style="margin-bottom: 3rem;">
+      <div class="prediction-result-card cuboid-card" style="border-radius: 24px; overflow: hidden; border: 1px solid var(--border-bright);">
+        
+        <div style="padding: 2.5rem; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); {% if prediction_result.predicted_dropout %}background: linear-gradient(135deg, #450a0a, #7f1d1d);{% else %}background: linear-gradient(135deg, #052e16, #14532d);{% endif %}">
+          <i data-lucide="{% if prediction_result.predicted_dropout %}alert-triangle{% else %}check-circle{% endif %}" style="width: 48px; height: 48px; color: rgba(255,255,255,0.8); margin-bottom: 1rem;"></i>
+          <h2 style="font-size: 1.5rem; font-weight: 700; color: white; margin: 0;">Prediction Complete</h2>
+        </div>
+
+        <div style="padding: 3rem; background: var(--bg-card);">
+          
+          <!-- Risk Indicator -->
+          <div style="text-align: center; margin-bottom: 3rem;">
+            <div style="width: 160px; height: 160px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 1.5rem; {% if prediction_result.predicted_dropout %}background: radial-gradient(circle, rgba(239,68,68,0.2), transparent); border: 2px solid rgba(239,68,68,0.5); box-shadow: 0 0 50px rgba(239,68,68,0.3);{% else %}background: radial-gradient(circle, rgba(34,197,94,0.2), transparent); border: 2px solid rgba(34,197,94,0.5); box-shadow: 0 0 50px rgba(34,197,94,0.3);{% endif %}">
+              <span style="font-size: 3rem; font-weight: 850; letter-spacing: -0.04em; {% if prediction_result.predicted_dropout %}color: #fca5a5;{% else %}color: #86efac;{% endif %}">{{ prediction_result.dropout_probability_percentage }}%</span>
+            </div>
+            <p style="color: var(--text-secondary); font-size: 1.1rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;">
+              {{ prediction_result.risk_level }}
+            </p>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem;">
+            
+            <!-- Details -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;">
+              <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="bar-chart" style="width: 20px; color: var(--accent-light);"></i> Probability Breakdown
+              </h3>
+              
+              <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;">
+                <span style="color: var(--text-secondary); font-size: 0.95rem;">Dropout Risk</span>
+                <strong style="color: #fca5a5;">{{ prediction_result.dropout_probability_percentage }}%</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;">
+                <span style="color: var(--text-secondary); font-size: 0.95rem;">Safe Continuation</span>
+                <strong style="color: #86efac;">{{ prediction_result.safe_probability_percentage }}%</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="color: var(--text-secondary); font-size: 0.95rem;">Status</span>
+                {% if prediction_result.predicted_dropout %}
+                <span class="badge badge-danger">High Risk</span>
+                {% else %}
+                <span class="badge badge-success">On Track</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div style="background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 16px; padding: 2rem;">
+              <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="map" style="width: 20px; color: var(--warning);"></i> Recommendations
+              </h3>
+
+              <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.8rem;">
+                {% if prediction_result.predicted_dropout %}
+                <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                  <i data-lucide="arrow-right-circle" style="width: 18px; color: var(--accent-light); flex-shrink: 0; margin-top: 2px;"></i> Additional academic support and tutoring
+                </li>
+                <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                  <i data-lucide="arrow-right-circle" style="width: 18px; color: var(--accent-light); flex-shrink: 0; margin-top: 2px;"></i> Immediate scheduling with academic advisors
+                </li>
+                <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                  <i data-lucide="arrow-right-circle" style="width: 18px; color: var(--accent-light); flex-shrink: 0; margin-top: 2px;"></i> Connection with peer mentoring networks
+                </li>
+                <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                  <i data-lucide="arrow-right-circle" style="width: 18px; color: var(--accent-light); flex-shrink: 0; margin-top: 2px;"></i> Weekly monitoring of attendance and grades
+                </li>
+                {% else %}
+                <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                  <i data-lucide="arrow-right-circle" style="width: 18px; color: var(--success); flex-shrink: 0; margin-top: 2px;"></i> Continue with current study habits
+                </li>
+                <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                  <i data-lucide="arrow-right-circle" style="width: 18px; color: var(--success); flex-shrink: 0; margin-top: 2px;"></i> Maintain strong attendance records
+                </li>
+                <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6;">
+                  <i data-lucide="arrow-right-circle" style="width: 18px; color: var(--success); flex-shrink: 0; margin-top: 2px;"></i> Start planning for further higher education
+                </li>
+                {% endif %}
+              </ul>
+            </div>
+            
+          </div>
+          
+          <div style="text-align: center; margin-top: 3rem;">
+            <a href="{% url 'predict' %}" class="btn btn-primary btn-large">
+              <i data-lucide="rotate-ccw"></i> Analyze Another Student
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Prediction Form -->
+    <div style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 24px; padding: 3rem;">
+      <div style="margin-bottom: 3rem; text-align: center;">
+        <div class="icon-3d" style="width: 48px; height: 48px; margin: 0 auto 1.5rem;"><i data-lucide="users"></i></div>
+        <h2 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 0.5rem;">Student Data Profile</h2>
+        <p style="color: var(--text-secondary);">Fill in the behavioral, demographic, and academic properties.</p>
+      </div>
+
+      <form method="POST" class="prediction-form" style="display: flex; flex-direction: column; gap: 3rem;">
+        {% csrf_token %}
+
+        <!-- Section 1 -->
+        <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-light); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="user" style="width: 18px;"></i> Demographics
+          </h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+            <div class="form-group">
+              <label for="student_name">Student Name</label>
+              <input type="text" id="student_name" name="student_name" placeholder="Full name" required />
+            </div>
+            <div class="form-group">
+              <label for="school">School</label>
+              <input list="school_list" id="school" name="school" placeholder="Select or type school" required />
+              <datalist id="school_list">
+                <option value="GP">Gabriel Pereira</option>
+                <option value="MS">Mousinho da Silveira</option>
+              </datalist>
+            </div>
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender" required>
+                <option value="">— Select —</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="age">Age (5-18)</label>
+              <input type="number" id="age" name="age" min="5" max="18" placeholder="e.g. 16" required />
+            </div>
+            <div class="form-group">
+              <label for="address">Address Type</label>
+              <select id="address" name="address" required>
+                <option value="">— Select —</option>
+                <option value="U">Urban</option>
+                <option value="R">Rural</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2 -->
+        <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--purple); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="home" style="width: 18px;"></i> Family Background
+          </h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+            <!-- Fields exactly as before to not break form submission -->
+            <div class="form-group"><label for="family_size">Family Size</label><select id="family_size" name="family_size" required><option value="">— Select —</option><option value="LT3">Less than 3</option><option value="GT3">3 or more</option></select></div>
+            <div class="form-group"><label for="parental_status">Parental Status</label><select id="parental_status" name="parental_status" required><option value="">— Select —</option><option value="married">Married</option><option value="widowed">Widowed</option><option value="factmarital">Fact marital union</option><option value="divorced">Divorced</option><option value="single">Single</option></select></div>
+            <div class="form-group"><label for="mother_education">Mother's Edu. (1-4)</label><input type="number" id="mother_education" name="mother_education" min="1" max="4" value="1" required /></div>
+            <div class="form-group"><label for="father_education">Father's Edu. (1-4)</label><input type="number" id="father_education" name="father_education" min="1" max="4" value="1" required /></div>
+            <div class="form-group">
+              <label for="mother_job">Mother's Job</label>
+              <input list="job_list" id="mother_job" name="mother_job" placeholder="Select or type job" required />
+            </div>
+            <div class="form-group">
+              <label for="father_job">Father's Job</label>
+              <input list="job_list" id="father_job" name="father_job" placeholder="Select or type job" required />
+            </div>
+            <datalist id="job_list">
+              <option value="teacher">Teacher</option>
+              <option value="health">Health care</option>
+              <option value="civil_services">Civil services</option>
+              <option value="at_home">At home</option>
+              <option value="other">Other</option>
+            </datalist>
+            <div class="form-group">
+              <label for="guardian">Guardian</label>
+              <input list="guardian_list" id="guardian" name="guardian" placeholder="Select or type guardian" required />
+              <datalist id="guardian_list">
+                <option value="mother">Mother</option>
+                <option value="father">Father</option>
+                <option value="other">Other</option>
+              </datalist>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 -->
+        <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="book-open" style="width: 18px;"></i> Academics
+          </h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+            <div class="form-group"><label for="study_time">Study Time (1-4)</label><input type="number" id="study_time" name="study_time" min="1" max="4" value="1" required /></div>
+            <div class="form-group"><label for="travel_time">Travel Time (1-4)</label><input type="number" id="travel_time" name="travel_time" min="1" max="4" value="1" required /></div>
+            <div class="form-group"><label for="failures">Past Failures (0-3)</label><input type="number" id="failures" name="failures" min="0" max="3" value="0" required /></div>
+            <div class="form-group"><label for="absences">Absences</label><input type="number" id="absences" name="absences" min="0" max="100" value="0" required /></div>
+            <div class="form-group"><label for="grade_1">Period 1 Grade (0-20)</label><input type="number" id="grade_1" name="grade_1" min="0" max="20" value="10" required /></div>
+            <div class="form-group"><label for="grade_2">Period 2 Grade (0-20)</label><input type="number" id="grade_2" name="grade_2" min="0" max="20" value="10" required /></div>
+            <div class="form-group"><label for="final_grade">Final Grade (0-20)</label><input type="number" id="final_grade" name="final_grade" min="0" max="20" value="10" required /></div>
+            <div class="form-group"><label for="reason_choosing_school">Reason for School</label><select id="reason_choosing_school" name="reason_choosing_school" required><option value="">— Select —</option><option value="course">Course</option><option value="reputation">Reputation</option><option value="location">Location</option><option value="other">Other</option></select></div>
+            <div class="form-group"><label for="higher_education">Wants Higher Edu.</label><select id="higher_education" name="higher_education" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+            <div class="form-group"><label for="attended_nursery">Attended Nursery</label><select id="attended_nursery" name="attended_nursery" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+          </div>
+        </div>
+
+        <!-- Section 4 -->
+        <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+          <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #10b981; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+            <i data-lucide="heart-pulse" style="width: 18px;"></i> Support & Lifestyle
+          </h3>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+            <div class="form-group"><label for="school_support">School Support</label><select id="school_support" name="school_support" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+            <div class="form-group"><label for="family_support">Family Support</label><select id="family_support" name="family_support" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+            <div class="form-group"><label for="extra_paid_class">Extra Paid Classes</label><select id="extra_paid_class" name="extra_paid_class" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+            <div class="form-group"><label for="extra_curricular">Extra Curricular</label><select id="extra_curricular" name="extra_curricular" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+            
+            <div class="form-group"><label for="health_status">Health Status (1-5)</label><input type="number" id="health_status" name="health_status" min="1" max="5" value="3" required /></div>
+            <div class="form-group"><label for="weekend_alcohol">Weekend Alcohol (1-5)</label><input type="number" id="weekend_alcohol" name="weekend_alcohol" min="1" max="5" value="1" required /></div>
+            <div class="form-group"><label for="weekday_alcohol">Weekday Alcohol (1-5)</label><input type="number" id="weekday_alcohol" name="weekday_alcohol" min="1" max="5" value="1" required /></div>
+            <div class="form-group"><label for="free_time">Free Time (1-5)</label><input type="number" id="free_time" name="free_time" min="1" max="5" value="3" required /></div>
+            <div class="form-group"><label for="going_out">Going Out (1-5)</label><input type="number" id="going_out" name="going_out" min="1" max="5" value="3" required /></div>
+            <div class="form-group"><label for="family_relationship">Family Relation (1-5)</label><input type="number" id="family_relationship" name="family_relationship" min="1" max="5" value="4" required /></div>
+            <div class="form-group"><label for="internet_access">Internet Access</label><select id="internet_access" name="internet_access" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+            <div class="form-group"><label for="in_relationship">In Relationship</label><select id="in_relationship" name="in_relationship" required><option value="">— Select —</option><option value="yes">Yes</option><option value="no">No</option></select></div>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end;">
+          <a href="{% url 'home' %}" class="btn btn-secondary" style="border-radius: 999px;">Cancel</a>
+          <button type="submit" class="btn btn-primary btn-large" style="border-radius: 999px;">
+            <i data-lucide="zap"></i> Predict Risk Now
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

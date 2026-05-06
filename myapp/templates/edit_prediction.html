@@ -1,0 +1,147 @@
+{% extends 'base.html' %} 
+{% block title %}Edit Prediction — Aetheria{% endblock %} 
+{% block content %}
+<div class="edit-prediction-section">
+
+  <!-- Header -->
+  <div class="history-header">
+    <div class="icon-3d" style="margin: 0 auto 1.5rem; width: 56px; height: 56px;">
+      <i data-lucide="edit-3" style="width: 28px; height: 28px; color: var(--accent-light);"></i>
+    </div>
+    <h1>Edit Prediction Data</h1>
+    <p class="history-subtitle">Update statistical details for <strong style="color: var(--text-primary);">{{ prediction.student_name }}</strong></p>
+  </div>
+
+  <div class="edit-prediction-container" style="display: grid; grid-template-columns: 1fr 3fr; gap: 1.5rem; max-width: 1300px; margin: 0 auto;">
+
+    <!-- Left Sidebar: Prediction Info -->
+    <div class="prediction-info-sidebar">
+      <div class="cuboid-hover" style="position: sticky; top: 100px;">
+        <div class="feature-card cuboid-card" style="padding: 2.5rem; {% if prediction.predicted_dropout %}border-color: rgba(239,68,68,0.3);{% else %}border-color: rgba(34,197,94,0.3);{% endif %}">
+          <h3 style="display: flex; align-items: center; gap: 0.5rem; font-size: 1.1rem; margin-bottom: 2rem; color: white;">
+            <i data-lucide="activity" style="width: 20px; color: var(--accent-light);"></i> Status
+          </h3>
+          
+          <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <div>
+              <span style="display: block; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.25rem;">Risk Percentage</span>
+              <strong style="font-size: 1.5rem; {% if prediction.predicted_dropout %}color: #fca5a5;{% else %}color: #86efac;{% endif %}">{{ prediction.dropout_risk_percentage|floatformat:1 }}%</strong>
+            </div>
+            
+            <div>
+              <span style="display: block; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.25rem;">Current Status</span>
+              {% if prediction.predicted_dropout %}
+              <div class="badge badge-danger" style="display: inline-flex; align-items: center; gap: 0.25rem;"><i data-lucide="alert-triangle" style="width: 12px; height: 12px;"></i> High Risk</div>
+              {% else %}
+              <div class="badge badge-success" style="display: inline-flex; align-items: center; gap: 0.25rem;"><i data-lucide="check-circle" style="width: 12px; height: 12px;"></i> Low Risk</div>
+              {% endif %}
+            </div>
+            
+            <div>
+              <span style="display: block; color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.25rem;">Timestamp</span>
+              <span style="color: var(--text-primary); font-size: 0.95rem;">{{ prediction.created_at|date:"M d, Y H:i" }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Content: Edit Form -->
+    <div class="edit-form-content">
+      <div class="cuboid-hover">
+        <div class="feature-card cuboid-card" style="padding: 3rem;">
+          <form method="POST" class="edit-prediction-form" style="display: flex; flex-direction: column; gap: 3rem;">
+            {% csrf_token %}
+
+            <!-- Demographics -->
+            <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+              <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent-light); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i data-lucide="user" style="width: 18px;"></i> Demographics
+              </h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                <div class="form-group"><label for="student_name">Student Name</label><input type="text" id="student_name" name="student_name" value="{{ prediction.student_name }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="school">School</label><select id="school" name="school" required style="background: rgba(255,255,255,0.02);">
+                  <option value="">— Select —</option><option value="GP" {% if prediction.school == "GP" %}selected{% endif %}>Gabriel Pereira</option><option value="MS" {% if prediction.school == "MS" %}selected{% endif %}>Mousinho da Silveira</option>
+                </select></div>
+                <div class="form-group"><label for="gender">Gender</label><select id="gender" name="gender" required style="background: rgba(255,255,255,0.02);">
+                  <option value="">— Select —</option><option value="M" {% if prediction.gender == "M" %}selected{% endif %}>Male</option><option value="F" {% if prediction.gender == "F" %}selected{% endif %}>Female</option>
+                </select></div>
+                <div class="form-group"><label for="age">Age</label><input type="number" id="age" name="age" min="15" max="40" value="{{ prediction.age }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="address">Address</label><select id="address" name="address" required style="background: rgba(255,255,255,0.02);">
+                  <option value="">— Select —</option><option value="U" {% if prediction.address == "U" %}selected{% endif %}>Urban</option><option value="R" {% if prediction.address == "R" %}selected{% endif %}>Rural</option>
+                </select></div>
+              </div>
+            </div>
+
+            <!-- Family -->
+            <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+              <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--purple); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i data-lucide="home" style="width: 18px;"></i> Family Background
+              </h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                <div class="form-group"><label for="family_size">Family Size</label><select id="family_size" name="family_size" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="LT3" {% if prediction.family_size == "LT3" %}selected{% endif %}>Less than 3</option><option value="GT3" {% if prediction.family_size == "GT3" %}selected{% endif %}>3 or more</option></select></div>
+                <div class="form-group"><label for="parental_status">Parental Status</label><select id="parental_status" name="parental_status" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="married" {% if prediction.parental_status == "married" %}selected{% endif %}>Married</option><option value="widowed" {% if prediction.parental_status == "widowed" %}selected{% endif %}>Widowed</option><option value="factmarital" {% if prediction.parental_status == "factmarital" %}selected{% endif %}>Fact marital union</option><option value="divorced" {% if prediction.parental_status == "divorced" %}selected{% endif %}>Divorced</option><option value="single" {% if prediction.parental_status == "single" %}selected{% endif %}>Single</option></select></div>
+                <div class="form-group"><label for="mother_education">Mother's Edu</label><input type="number" id="mother_education" name="mother_education" min="1" max="4" value="{{ prediction.mother_education }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="father_education">Father's Edu</label><input type="number" id="father_education" name="father_education" min="1" max="4" value="{{ prediction.father_education }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="mother_job">Mother's Job</label><select id="mother_job" name="mother_job" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="teacher" {% if prediction.mother_job == "teacher" %}selected{% endif %}>Teacher</option><option value="health" {% if prediction.mother_job == "health" %}selected{% endif %}>Health</option><option value="civil_services" {% if prediction.mother_job == "civil_services" %}selected{% endif %}>Civil Services</option><option value="at_home" {% if prediction.mother_job == "at_home" %}selected{% endif %}>At Home</option><option value="other" {% if prediction.mother_job == "other" %}selected{% endif %}>Other</option></select></div>
+                <div class="form-group"><label for="father_job">Father's Job</label><select id="father_job" name="father_job" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="teacher" {% if prediction.father_job == "teacher" %}selected{% endif %}>Teacher</option><option value="health" {% if prediction.father_job == "health" %}selected{% endif %}>Health</option><option value="civil_services" {% if prediction.father_job == "civil_services" %}selected{% endif %}>Civil Services</option><option value="at_home" {% if prediction.father_job == "at_home" %}selected{% endif %}>At Home</option><option value="other" {% if prediction.father_job == "other" %}selected{% endif %}>Other</option></select></div>
+              </div>
+            </div>
+
+            <!-- Academics -->
+            <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+              <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--cyan); margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i data-lucide="book-open" style="width: 18px;"></i> Academics
+              </h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                <div class="form-group"><label for="study_time">Study Time</label><input type="number" id="study_time" name="study_time" min="1" max="4" value="{{ prediction.study_time }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="travel_time">Travel Time</label><input type="number" id="travel_time" name="travel_time" min="1" max="4" value="{{ prediction.travel_time }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="failures">Past Failures</label><input type="number" id="failures" name="failures" min="0" max="3" value="{{ prediction.number_of_failures }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="absences">Absences</label><input type="number" id="absences" name="absences" min="0" max="100" value="{{ prediction.number_of_absences }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="grade_1">First Grad.</label><input type="number" id="grade_1" name="grade_1" min="0" max="20" value="{{ prediction.grade_1 }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="grade_2">Second Grad.</label><input type="number" id="grade_2" name="grade_2" min="0" max="20" value="{{ prediction.grade_2 }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="final_grade">Final Grade</label><input type="number" id="final_grade" name="final_grade" min="0" max="20" value="{{ prediction.final_grade }}" required style="background: rgba(255,255,255,0.02);" /></div>
+              </div>
+            </div>
+
+            <!-- Support -->
+            <div style="padding-bottom: 3rem; border-bottom: 1px solid var(--border);">
+              <h3 style="font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #10b981; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.75rem;">
+                <i data-lucide="heart-pulse" style="width: 18px;"></i> Support & Lifestyle
+              </h3>
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem;">
+                <div class="form-group"><label for="school_support">School Support</label><select id="school_support" name="school_support" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="yes" {% if prediction.school_support == 'yes' %}selected{% endif %}>Yes</option><option value="no" {% if prediction.school_support == 'no' %}selected{% endif %}>No</option></select></div>
+                <div class="form-group"><label for="family_support">Family Support</label><select id="family_support" name="family_support" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="yes" {% if prediction.family_support == 'yes' %}selected{% endif %}>Yes</option><option value="no" {% if prediction.family_support == 'no' %}selected{% endif %}>No</option></select></div>
+                <div class="form-group"><label for="health_status">Health Status</label><input type="number" id="health_status" name="health_status" min="1" max="5" value="{{ prediction.health_status }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="weekend_alcohol">Weekend Alcohol</label><input type="number" id="weekend_alcohol" name="weekend_alcohol" min="1" max="5" value="{{ prediction.weekend_alcohol_consumption }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="weekday_alcohol">Weekday Alcohol</label><input type="number" id="weekday_alcohol" name="weekday_alcohol" min="1" max="5" value="{{ prediction.weekday_alcohol_consumption }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="free_time">Free Time</label><input type="number" id="free_time" name="free_time" min="1" max="5" value="{{ prediction.free_time }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="going_out">Going Out</label><input type="number" id="going_out" name="going_out" min="1" max="5" value="{{ prediction.going_out }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="family_relationship">Family Relation</label><input type="number" id="family_relationship" name="family_relationship" min="1" max="5" value="{{ prediction.family_relationship }}" required style="background: rgba(255,255,255,0.02);" /></div>
+                <div class="form-group"><label for="in_relationship">In Relationship</label><select id="in_relationship" name="in_relationship" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="yes" {% if prediction.in_relationship == 'yes' %}selected{% endif %}>Yes</option><option value="no" {% if prediction.in_relationship == 'no' %}selected{% endif %}>No</option></select></div>
+                <div class="form-group"><label for="higher_education">Wants Higher Edu.</label><select id="higher_education" name="higher_education" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="yes" {% if prediction.wants_higher_education == 'yes' %}selected{% endif %}>Yes</option><option value="no" {% if prediction.wants_higher_education == 'no' %}selected{% endif %}>No</option></select></div>
+                <div class="form-group"><label for="internet_access">Internet Access</label><select id="internet_access" name="internet_access" required style="background: rgba(255,255,255,0.02);"><option value="">— Select —</option><option value="yes" {% if prediction.internet_access == 'yes' %}selected{% endif %}>Yes</option><option value="no" {% if prediction.internet_access == 'no' %}selected{% endif %}>No</option></select></div>
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end; margin-top: 1rem;">
+              <a href="{% url 'prediction_history' %}" class="btn btn-secondary" style="border-radius: 999px;">Cancel</a>
+              <button type="submit" class="btn btn-primary" style="border-radius: 999px;">
+                <i data-lucide="save" style="width: 18px;"></i> Save Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  @media (max-width: 900px) {
+    .edit-prediction-container { grid-template-columns: 1fr !important; }
+  }
+</style>
+{% endblock %}
